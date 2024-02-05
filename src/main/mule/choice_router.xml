@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ddb69581-f903-4491-89fb-9d87f26987c0" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choice_routerFlow" doc:id="0f94dfbd-3a88-4814-8a7f-8d637e9807c5" >
+		<http:listener doc:name="Listener" doc:id="eae7c6b8-486b-47a6-a056-e549eb394c6f" config-ref="HTTP_Listener_config" path="/choice"/>
+		<set-payload value="#[attributes.method]" doc:name="httpcall" doc:id="57951344-4207-49b2-9048-e78d2f784e3b" />
+		<choice doc:name="Choice" doc:id="4791e04b-4568-4c05-8135-314158447d68">
+			<when expression='#[attributes.method== "GET"]'>
+				<logger level="INFO" doc:name="Logger 1" doc:id="84611860-b15d-4c5b-ac82-7f3b2e1c67ee" message='#["logger 1"]'/>
+			</when>
+			<when expression='#[attributes.method== "POST"]'>
+				<logger level="INFO" doc:name="Logger 2" doc:id="12f9d92c-98d3-44ab-8346-8097f904e26a" message='#["logger 2"]' />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Other" doc:id="eea019cb-c4ff-4161-a468-0a14bafe4b1e" message='#["Other than GET and POST method is called"]' />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="dd95d21a-f71d-47c1-85f7-28115d45a90e" message='#["END OF FLOW.........!!"]'/>
+	</flow>
+</mule>
